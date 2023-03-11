@@ -1,0 +1,14 @@
+{
+    "name": "actions-release",
+    "version": "1.0.0",
+    "description": "GitHub Action to create a release",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Clockwork Marketing <dev@clock-work.co.uk>",
+    "license": "ISC",
+    "dependencies": {
+        "extract-changelog-release": "^1.0.2"
+    }
+}

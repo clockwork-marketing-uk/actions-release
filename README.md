@@ -11,3 +11,12 @@ GitHub Action that creates a new release.
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
 ```
+
+To create a Pre Release add the following
+
+```yaml
+
+    with:
+        pre
+
+```

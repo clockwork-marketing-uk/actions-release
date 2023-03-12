@@ -17,6 +17,6 @@ To create a Pre Release add the following
 ```yaml
 
     with:
-        pre
+        prerelease: true
 
 ```

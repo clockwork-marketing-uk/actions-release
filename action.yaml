@@ -14,6 +14,10 @@ inputs:
   prerelease:
     description: "Is this a Pre Release"
     required: true
+  branch_name:
+    description: "Name of the branch to release"
+    default: "main"
+    required: true
 
 outputs:
   release-id:
@@ -53,3 +57,4 @@ runs:
         name: ${{ steps.package-version.outputs.result }}
         bodyFile: "RELEASE_BODY.md"
         prerelease: ${{ inputs.prerelease }}
+        commit: ${{ inputs.branch_name }}

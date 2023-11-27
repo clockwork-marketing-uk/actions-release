@@ -5,12 +5,6 @@ inputs:
   github-token:
     description: "Github Token"
     required: true
-  fa-npm-token:
-    description: "Fontawesome Token"
-    required: true
-  npm_token:
-    description: "NPM Token"
-    required: true
   prerelease:
     description: "Is this a Pre Release"
     required: true
@@ -32,10 +26,7 @@ runs:
   steps:
     - name: Install Dependencies
       shell: bash
-      run: |
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ inputs.fa-npm-token }}"
-          npm config set '//registry.npmjs.org/:_authToken' "${{ inputs.npm_token }}"
-          npm ci
+      run: npm ci
 
     - name: Get Version
       id: package-version

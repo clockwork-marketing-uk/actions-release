@@ -6,7 +6,7 @@ GitHub Action that creates a new release.
 
   - name: Create a Release
     id: create-release
-    uses: clockwork-marketing-uk/actions-release@1.0.0
+    uses: clockwork-marketing-uk/actions-release@1.2.0
     with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 

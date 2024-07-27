@@ -31,7 +31,7 @@ runs:
 
     - name: Get Version
       id: package-version
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         result-encoding: string
         script: return require('./package.json').version

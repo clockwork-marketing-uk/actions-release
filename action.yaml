@@ -1,58 +1,70 @@
 name: Create Release
-description: "Create a Release"
+description: 'Create a Release'
 
 inputs:
-  github-token:
-    description: "Github Token"
-    required: true
-  prerelease:
-    description: "Is this a Pre Release"
-    default: "false"
-    required: true
-  branch_name:
-    description: "Name of the branch to release"
-    default: "main"
-    required: true
+    github-token:
+        description: 'Github Token'
+        required: true
+    prerelease:
+        description: 'Is this a Pre Release'
+        default: 'false'
+        required: true
+    branch_name:
+        description: 'Name of the branch to release'
+        default: 'main'
+        required: true
 
 outputs:
-  release-id:
-    description: "Release Id"
-    value: ${{ steps.create-release.outputs.id }}
-  package-version:
-    description: "Current Version"
-    value: ${{ steps.package-version.outputs.result }}
+    release-id:
+        description: 'Release Id'
+        value: ${{ steps.create-release.outputs.id }}
+    package-version:
+        description: 'Current Version'
+        value: ${{ steps.package-version.outputs.result }}
 
 runs:
-  using: composite
-  steps:
-    - name: Install node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        registry-url: 'https://registry.npmjs.org'
+    using: composite
+    steps:
+        - name: Install node
+          uses: actions/setup-node@v4
+          with:
+              node-version: 20
+              registry-url: 'https://registry.npmjs.org'
 
-    - name: Install Dependencies
-      shell: bash
-      run: npm ci
+        - name: Install Dependencies
+          shell: bash
+          run: npm ci
 
-    - name: Get Version
-      id: package-version
-      uses: actions/github-script@v7
-      with:
-        result-encoding: string
-        script: return require('./package.json').version
+        - name: Bump version and generate changelog
+          shell: bash
+          run: npx standard-version
 
-    - name: Generate Release Body
-      shell: bash
-      run: npx extract-changelog-release > RELEASE_BODY.md
+        - name: Push commit and tags
+          shell: bash
+          run: |
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git push origin HEAD:${{ inputs.branch_name }}
+              git push --follow-tags origin ${{ inputs.branch_name }}
 
-    - name: create release
-      id: create-release
-      uses: ncipollo/release-action@v1
-      with:
-        token: ${{ inputs.github-token }}
-        tag: ${{ steps.package-version.outputs.result }}
-        name: ${{ steps.package-version.outputs.result }}
-        bodyFile: "RELEASE_BODY.md"
-        prerelease: ${{ inputs.prerelease }}
-        commit: ${{ inputs.branch_name }}
+        - name: Get Version
+          id: package-version
+          uses: actions/github-script@v7
+          with:
+              result-encoding: string
+              script: return require('./package.json').version
+
+        - name: Generate Release Body
+          shell: bash
+          run: npx extract-changelog-release > RELEASE_BODY.md
+
+        - name: create release
+          id: create-release
+          uses: ncipollo/release-action@v1
+          with:
+              token: ${{ inputs.github-token }}
+              tag: ${{ steps.package-version.outputs.result }}
+              name: ${{ steps.package-version.outputs.result }}
+              bodyFile: 'RELEASE_BODY.md'
+              prerelease: ${{ inputs.prerelease }}
+              commit: ${{ inputs.branch_name }}
